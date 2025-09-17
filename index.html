@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Salon Website Builder</title>
+    <style>
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+        @import url("https://fonts.googleapis.com/css?family=Merriweather:300,700,300italic,700italic|Source+Sans+Pro:900");
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Merriweather', Georgia, serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 50%, #1a1a1a 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .builder-container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 0;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: #1a1a1a;
+            padding: 30px;
+            overflow-y: auto;
+            border-right: 2px solid #d4af37;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #d4af37;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-weight: 100;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            color: #ccc;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h3 {
+            margin-bottom: 15px;
+            color: #d4af37;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 100;
+            border-bottom: 1px solid #d4af37;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 300;
+            color: #d4af37;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #3a3a3a;
+            border-radius: 0;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            background: #2a2a2a;
+            color: #ccc;
+            font-family: inherit;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #d4af37;
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 12px;
+            background: #2a2a2a;
+            border: 2px solid #3a3a3a;
+            color: #ccc;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover .file-upload-label {
+            border-color: #d4af37;
+            color: #d4af37;
+        }
+
+        .color-section {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 0;
+            margin: 20px 0;
+            border: 1px solid #d4af37;
+        }
+
+        .color-inputs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .color-input-group {
+            text-align: center;
+        }
+
+        .color-picker {
+            width: 100%;
+            height: 40px;
+            border: 2px solid #3a3a3a;
+            border-radius: 0;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        /* Services Section */
+        .services-section {
+            background: #2a2a2a;
+            padding: 20px;
+            border: 1px solid #d4af37;
+            margin: 20px 0;
+        }
+
+        .service-item {
+            background: #1a1a1a;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #3a3a3a;
+            position: relative;
+        }
+
+        .remove-service {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #d4af37;
+            color: #1a1a1a;
+            border: none;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .add-service-btn {
+            background: linear-gradient(135deg, #d4af37, #f4d03f);
+            color: #1a1a1a;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            transition: transform 0.2s;
+        }
+
+        .add-service-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Preview Styles */
+        .preview {
+            position: relative;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+
+        .preview-content {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+        }
+
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 400px;
+            width: calc(100vw - 400px);
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            z-index: 1;
+        }
+
+        .glass-container {
+            position: relative;
+            background: rgba(30, 37, 45, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            margin: 40px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Header */
+        .site-header {
+            text-align: center;
+            padding: 80px 40px;
+            color: #ffffff;
+            position: relative;
+            z-index: 3;
+        }
+
+        .site-header h1 {
+            font-family: "Source Sans Pro", Helvetica, sans-serif;
+            font-size: 4rem;
+            font-weight: 100;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .site-header p {
+            font-size: 1.2rem;
+            font-style: italic;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+
+        /* Navigation */
+        .site-nav {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            padding: 0;
+            margin: 0 40px;
+            border-radius: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            margin: 0;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 15px 25px;
+            color: #ffffff;
+            text-decoration: none;
+            font-family: "Source Sans Pro", Helvetica, sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.075em;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom-color: var(--accent-color, #d4af37);
+        }
+
+        .nav-links .active a {
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom-color: var(--accent-color, #d4af37);
+        }
+
+        /* Services Grid */
+        .services {
+            padding: 80px 40px;
+            color: #ffffff;
+        }
+
+        .services h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 50px;
+            color: var(--accent-color, #d4af37);
+            font-weight: 100;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: "Source Sans Pro", Helvetica, sans-serif;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            padding: 30px;
+            border-radius: 0;
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .service-card:hover::before {
+            left: 100%;
+        }
+
+        .service-card:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(212,175,55,0.2);
+        }
+
+        .service-card h3 {
+            color: var(--accent-color, #d4af37);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .service-card p {
+            color: #ccc;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Contact Section */
+        .contact-info {
+            padding: 60px 40px;
+            text-align: center;
+            color: #fff;
+            border-top: 3px solid var(--accent-color, #d4af37);
+        }
+
+        .contact-info h3 {
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: var(--accent-color, #d4af37);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 100;
+            font-family: "Source Sans Pro", Helvetica, sans-serif;
+        }
+
+        .contact-info p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .contact-info strong {
+            color: var(--accent-color, #d4af37);
+        }
+
+        /* Social Icons */
+        .social-icons {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .social-icon:hover {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: var(--accent-color, #d4af37);
+            color: var(--accent-color, #d4af37);
+            transform: scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .builder-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: 2;
+                border-right: none;
+                border-top: 2px solid #d4af37;
+            }
+            
+            .preview {
+                order: 1;
+            }
+
+            .background-overlay {
+                left: 0;
+                width: 100vw;
+            }
+
+            .social-icons {
+                top: 10px;
+                right: 10px;
+            }
+
+            .glass-container {
+                margin: 20px;
+                min-height: calc(100vh - 40px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .site-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                flex-direction: column;
+            }
+
+            .social-icons {
+                position: relative;
+                top: auto;
+                right: auto;
+                justify-content: center;
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="builder-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="header">
+                <h1>✨ Salon Builder</h1>
+                <p>Create Your Premium Website</p>
+            </div>
+
+            <!-- Basic Info -->
+            <div class="section">
+                <h3>📝 Basic Information</h3>
+                
+                <div class="form-group">
+                    <label for="salonName">Salon Name</label>
+                    <input type="text" id="salonName" placeholder="Enter your salon name" value="Luxe Beauty Salon">
+                </div>
+
+                <div class="form-group">
+                    <label for="tagline">Tagline</label>
+                    <input type="text" id="tagline" placeholder="Your salon's tagline" value="Elegance Redefined">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" placeholder="Tell customers about your salon" rows="3">Indulge in the ultimate luxury experience at our prestigious salon.</textarea>
+                </div>
+            </div>
+
+            <!-- Background Image -->
+            <div class="section">
+                <h3>🖼️ Background Image</h3>
+                <div class="file-upload">
+                    <input type="file" id="backgroundImage" accept="image/*">
+                    <label for="backgroundImage" class="file-upload-label">
+                        <i class="fas fa-upload"></i> Choose Background Image
+                    </label>
+                </div>
+                <small style="color: #999; display: block; margin-top: 10px;">Recommended: High quality image (1920x1080 or larger)</small>
+            </div>
+
+            <!-- Services -->
+            <div class="section">
+                <h3>⚡ Services</h3>
+                <div class="services-section">
+                    <div id="servicesList">
+                        <div class="service-item">
+                            <button class="remove-service" onclick="removeService(this)">×</button>
+                            <div class="form-group">
+                                <label>Service Name</label>
+                                <input type="text" class="service-name" value="Master Styling" placeholder="Service name">
+                            </div>
+                            <div class="form-group">
+                                <label>Service Description</label>
+                                <textarea class="service-description" rows="2" placeholder="Service description">Precision cuts and advanced coloring techniques by our certified master stylists.</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="add-service-btn" onclick="addService()">+ Add Service</button>
+                </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="section">
+                <h3>📞 Contact Information</h3>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="(555) 123-4567" value="(555) 987-6543">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="contact@yoursalon.com" value="info@luxebeauty.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" placeholder="123 Beauty Street, Your City" value="456 Luxury Avenue, Elite District">
+                </div>
+            </div>
+
+            <!-- Colors -->
+            <div class="section">
+                <h3>🎨 Colors</h3>
+                <div class="color-section">
+                    <div class="color-inputs">
+                        <div class="color-input-group">
+                            <label for="primaryColor">Primary</label>
+                            <input type="color" id="primaryColor" class="color-picker" value="#1e252d">
+                        </div>
+                        <div class="color-input-group">
+                            <label for="secondaryColor">Secondary</label>
+                            <input type="color" id="secondaryColor" class="color-picker" value="#2c2c2c">
+                        </div>
+                        <div class="color-input-group">
+                            <label for="accentColor">Accent</label>
+                            <input type="color" id="accentColor" class="color-picker" value="#d4af37">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="preview">
+            <div class="background-overlay" id="backgroundOverlay"></div>
+            
+            <!-- Social Icons -->
+            <div class="social-icons">
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+            </div>
+
+            <div class="preview-content">
+                <div class="glass-container">
+                    <!-- Header -->
+                    <div class="site-header">
+                        <h1 id="previewName">Luxe Beauty Salon</h1>
+                        <p id="previewTagline">Elegance Redefined</p>
+                    </div>
+
+                    <!-- Navigation -->
+                    <nav class="site-nav">
+                        <ul class="nav-links">
+                            <li class="active"><a href="#home">Home</a></li>
+                            <li><a href="#services">Services</a></li>
+                            <li><a href="#about">About</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                        </ul>
+                    </nav>
+
+                    <!-- Services -->
+                    <div class="services">
+                        <h2>Our Exclusive Services</h2>
+                        <div class="services-grid" id="previewServicesGrid">
+                            <div class="service-card">
+                                <h3>✂️ Master Styling</h3>
+                                <p>Precision cuts and advanced coloring techniques by our certified master stylists.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="contact-info">
+                        <h3>Connect With Us</h3>
+                        <p id="previewDescription">Indulge in the ultimate luxury experience at our prestigious salon.</p>
+                        <p><strong>📞 Phone:</strong> <span id="previewPhone">(555) 987-6543</span></p>
+                        <p><strong>📧 Email:</strong> <span id="previewEmail">info@luxebeauty.com</span></p>
+                        <p><strong>📍 Address:</strong> <span id="previewAddress">456 Luxury Avenue, Elite District</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update preview functions
+        function updatePreview() {
+            document.getElementById('previewName').textContent = document.getElementById('salonName').value || 'Your Salon Name';
+            document.getElementById('previewTagline').textContent = document.getElementById('tagline').value || 'Your Amazing Tagline';
+            document.getElementById('previewDescription').textContent = document.getElementById('description').value || 'Tell your customers about your amazing salon services and experience.';
+            document.getElementById('previewPhone').textContent = document.getElementById('phone').value || '(555) 123-4567';
+            document.getElementById('previewEmail').textContent = document.getElementById('email').value || 'contact@yoursalon.com';
+            document.getElementById('previewAddress').textContent = document.getElementById('address').value || '123 Beauty Street, Your City';
+            
+            updateServices();
+        }
+
+        function updateColors() {
+            const primaryColor = document.getElementById('primaryColor').value;
+            const secondaryColor = document.getElementById('secondaryColor').value;
+            const accentColor = document.getElementById('accentColor').value;
+            
+            document.documentElement.style.setProperty('--primary-color', primaryColor);
+            document.documentElement.style.setProperty('--secondary-color', secondaryColor);
+            document.documentElement.style.setProperty('--accent-color', accentColor);
+        }
+
+        function updateServices() {
+            const serviceItems = document.querySelectorAll('.service-item');
+            const previewGrid = document.getElementById('previewServicesGrid');
+            
+            previewGrid.innerHTML = '';
+            
+            serviceItems.forEach(item => {
+                const name = item.querySelector('.service-name').value;
+                const description = item.querySelector('.service-description').value;
+                
+                if (name.trim()) {
+                    const serviceCard = document.createElement('div');
+                    serviceCard.className = 'service-card';
+                    serviceCard.innerHTML = `
+                        <h3>${name}</h3>
+                        <p>${description || 'Service description'}</p>
+                    `;
+                    previewGrid.appendChild(serviceCard);
+                }
+            });
+        }
+
+        function addService() {
+            const servicesList = document.getElementById('servicesList');
+            const newService = document.createElement('div');
+            newService.className = 'service-item';
+            newService.innerHTML = `
+                <button class="remove-service" onclick="removeService(this)">×</button>
+                <div class="form-group">
+                    <label>Service Name</label>
+                    <input type="text" class="service-name" placeholder="Service name">
+                </div>
+                <div class="form-group">
+                    <label>Service Description</label>
+                    <textarea class="service-description" rows="2" placeholder="Service description"></textarea>
+                </div>
+            `;
+            servicesList.appendChild(newService);
+            
+            // Add event listeners to new inputs
+            newService.querySelector('.service-name').addEventListener('input', updateServices);
+            newService.querySelector('.service-description').addEventListener('input', updateServices);
+            
+            updateServices();
+        }
+
+        function removeService(button) {
+            button.parentElement.remove();
+            updateServices();
+        }
+
+        // Background image handler
+        function handleBackgroundImage() {
+            const fileInput = document.getElementById('backgroundImage');
+            const backgroundOverlay = document.getElementById('backgroundOverlay');
+            
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        backgroundOverlay.style.backgroundImage = `url(${e.target.result})`;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Initialize
+        function init() {
+            // Add event listeners
+            document.querySelectorAll('input, textarea').forEach(input => {
+                input.addEventListener('input', updatePreview);
+            });
+
+            document.querySelectorAll('input[type="color"]').forEach(colorInput => {
+                colorInput.addEventListener('change', updateColors);
+            });
+
+            // Add listeners to existing service inputs
+            document.querySelectorAll('.service-name, .service-description').forEach(input => {
+                input.addEventListener('input', updateServices);
+            });
+
+            handleBackgroundImage();
+            updatePreview();
+            updateColors();
+            updateServices();
+        }
+
+        // Start the app
+        init();
+    </script>
+</body>
+</html>
